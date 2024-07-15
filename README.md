@@ -6,9 +6,11 @@ Projeto conceitual utilizando arquitetura de microserviços com spring boot e ap
 
 * [Tecnologias](#tecnologias)
 * [Ferramentas utilizadas](#ferramentas-utilizadas)
-* [Execução do projeto](#execu%C3%A7%C3%A3o-do-projeto)
-  * [01 - Execução geral via docker-compose](#01---execu%C3%A7%C3%A3o-geral-via-docker-compose)
-  * [02 - Executando os serviços de bancos de dados e Message Broker](#03---executando-os-servi%C3%A7os-de-bancos-de-dados-e-message-broker)
+* [Executando o projeto](#executando-o-projeto)
+  * [01 - Executando via docker-compose](#01---executando-via-docker-compose)
+  * [02 - Executando via automação com script em Python](#02---executando-via-automa%C3%A7%C3%A3o-com-script-em-python)
+  * [03 - Executando os serviços de bancos de dados e Message Broker](#03---executando-os-servi%C3%A7os-de-bancos-de-dados-e-message-broker)
+  * [04 - Executando manualmente via CLI](#04---executando-manualmente-via-cli)
 * [Acessando a aplicação](#acessando-a-aplica%C3%A7%C3%A3o)
 * [Acessando tópicos com Redpanda Console](#acessando-t%C3%B3picos-com-redpanda-console)
 * [Dados da API](#dados-da-api)
@@ -37,7 +39,7 @@ Projeto conceitual utilizando arquitetura de microserviços com spring boot e ap
 * **Gradle**
 
 
-## Execução do projeto
+## Executando o projeto
 
 [Voltar ao início](#sum%C3%A1rio)
 
@@ -45,15 +47,37 @@ Há várias maneiras de executar os projetos:
 
 1. Executando tudo via `docker-compose`
 
-[Voltar ao nível anterior](#execu%C3%A7%C3%A3o-do-projeto)
+[Voltar ao nível anterior](#executando-o-projeto)
 
 Basta executar o comando no diretório raiz do repositório:
 
 `docker-compose up --build -d`
 
-### 02 - Executando os serviços de bancos de dados e Message Broker
+### 01 - Executando via docker-compose
 
-[Voltar ao nível anterior](#execu%C3%A7%C3%A3o-do-projeto)
+[Voltar ao nível anterior](#executando-o-projeto)
+
+Basta executar o comando no diretório raiz do repositório:
+
+`docker-compose up --build -d`
+
+**Obs.: para rodar tudo desta maneira, é necessário realizar o build das 5 aplicações, veja nos passos abaixo sobre como fazer isto.**
+
+### 02 - Executando via automação com script em Python
+
+[Voltar ao nível anterior](#executando-o-projeto)
+
+Basta executar o arquivo `build.py`. Para isto, **é necessário ter o Python 3 instalado**.
+
+Para executar, basta apenas executar o seguinte comando no diretório raiz do repositório:
+
+`python build.py`
+
+Será realizado o `build` de todas as aplicações, removidos todos os containers e em sequência, será rodado o `docker-compose`.
+
+### 03 - Executando os serviços de bancos de dados e Message Broker
+
+[Voltar ao nível anterior](#executando-o-projeto)
 
 Para que seja possível executar os serviços de bancos de dados e Message Broker, como MongoDB, PostgreSQL e Apache Kafka, basta ir no diretório raiz do repositório, onde encontra-se o arquivo `docker-compose.yml` e executar o comando:
 
@@ -70,6 +94,21 @@ Ou então:
 `docker stop ($docker ps -aq)`
 `docker container prune -f`
 
+### 04 - Executando manualmente via CLI
+
+[Voltar ao nível anterior](#executando-o-projeto)
+
+Antes da execução do projeto, realize o `build` da aplicação indo no diretório raiz e executando o comando:
+
+`gradle build -x test`
+
+Para executar os projetos com Gradle, basta entrar no diretório raiz de cada projeto, e executar o comando:
+
+`gradle bootRun`
+
+Ou então, entrar no diretório: `build/libs` e executar o comando:
+
+`java -jar nome_do_jar.jar`
 
 ## Acessando a aplicação
 
@@ -78,10 +117,6 @@ Ou então:
 Para acessar as aplicações e realizar um pedido, basta acessar a URL:
 
 http://localhost:3000/swagger-ui.html
-
-Você chegará nesta página:
-
-![Swagger](Conte%C3%BAdos/Documentacao.png)
 
 As aplicações executarão nas seguintes portas:
 
