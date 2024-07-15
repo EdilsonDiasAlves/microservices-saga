@@ -32,22 +32,19 @@ Projeto conceitual utilizando arquitetura de microserviços com spring boot e ap
 
 # Ferramentas utilizadas
 
-[Voltar ao início](#sum%C3%A1rio)
-
 * **IntelliJ IDEA Community Edition**
 * **Docker**
 * **Gradle**
-
+[Voltar ao início](#sum%C3%A1rio)
 
 ## Executando o projeto
-
-[Voltar ao início](#sum%C3%A1rio)
 
 Há várias maneiras de executar os projetos:
 
 1. Executando tudo via `docker-compose`
 
 [Voltar ao nível anterior](#executando-o-projeto)
+[Voltar ao início](#sum%C3%A1rio)
 
 Basta executar o comando no diretório raiz do repositório:
 
@@ -55,17 +52,16 @@ Basta executar o comando no diretório raiz do repositório:
 
 ### 01 - Executando via docker-compose
 
-[Voltar ao nível anterior](#executando-o-projeto)
-
 Basta executar o comando no diretório raiz do repositório:
 
 `docker-compose up --build -d`
 
 **Obs.: para rodar tudo desta maneira, é necessário realizar o build das 5 aplicações, veja nos passos abaixo sobre como fazer isto.**
 
-### 02 - Executando via automação com script em Python
-
 [Voltar ao nível anterior](#executando-o-projeto)
+[Voltar ao início](#sum%C3%A1rio)
+
+### 02 - Executando via automação com script em Python
 
 Basta executar o arquivo `build.py`. Para isto, **é necessário ter o Python 3 instalado**.
 
@@ -75,9 +71,10 @@ Para executar, basta apenas executar o seguinte comando no diretório raiz do re
 
 Será realizado o `build` de todas as aplicações, removidos todos os containers e em sequência, será rodado o `docker-compose`.
 
-### 03 - Executando os serviços de bancos de dados e Message Broker
-
 [Voltar ao nível anterior](#executando-o-projeto)
+[Voltar ao início](#sum%C3%A1rio)
+
+### 03 - Executando os serviços de bancos de dados e Message Broker
 
 Para que seja possível executar os serviços de bancos de dados e Message Broker, como MongoDB, PostgreSQL e Apache Kafka, basta ir no diretório raiz do repositório, onde encontra-se o arquivo `docker-compose.yml` e executar o comando:
 
@@ -94,9 +91,10 @@ Ou então:
 `docker stop ($docker ps -aq)`
 `docker container prune -f`
 
-### 04 - Executando manualmente via CLI
-
 [Voltar ao nível anterior](#executando-o-projeto)
+[Voltar ao início](#sum%C3%A1rio)
+
+### 04 - Executando manualmente via CLI
 
 Antes da execução do projeto, realize o `build` da aplicação indo no diretório raiz e executando o comando:
 
@@ -110,9 +108,10 @@ Ou então, entrar no diretório: `build/libs` e executar o comando:
 
 `java -jar nome_do_jar.jar`
 
-## Acessando a aplicação
-
+[Voltar ao nível anterior](#executando-o-projeto)
 [Voltar ao início](#sum%C3%A1rio)
+
+## Acessando a aplicação
 
 Para acessar as aplicações e realizar um pedido, basta acessar a URL:
 
@@ -132,18 +131,17 @@ As aplicações executarão nas seguintes portas:
 * PostgreSQL (Inventory-DB): 5434
 * MongoDB (Order-DB): 27017
 
-## Acessando tópicos com Redpanda Console
-
 [Voltar ao início](#sum%C3%A1rio)
+
+## Acessando tópicos com Redpanda Console
 
 Para acessar o Redpanda Console e visualizar tópicos e publicar eventos, basta acessar:
 
 http://localhost:8081
 
+[Voltar ao início](#sum%C3%A1rio)
 
 ### Acesso ao MongoDB
-
-[Voltar ao início](#sum%C3%A1rio)
 
 Para conectar-se ao MongoDB via linha de comando (cli) diretamente do docker-compose, basta executar o comando abaixo:
 
@@ -170,3 +168,5 @@ Para realizar queries e validar se os dados existem:
 **db.order.find(id=ObjectId("65006786d715e21bd38d1634"))**
 
 **db.order.find({ "products.product.code": "COMIC_BOOKS"})**
+
+[Voltar ao início](#sum%C3%A1rio)
