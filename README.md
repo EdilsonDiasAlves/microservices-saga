@@ -14,6 +14,9 @@ Projeto conceitual utilizando arquitetura de microserviços com spring boot e ap
 * [Acessando a aplicação](#acessando-a-aplica%C3%A7%C3%A3o)
 * [Acessando tópicos com Redpanda Console](#acessando-t%C3%B3picos-com-redpanda-console)
 * [Dados da API](#dados-da-api)
+  * [Produtos registrados e seu estoque](#produtos-registrados-e-seu-estoque)
+  * [Endpoint para iniciar a saga](#endpoint-para-iniciar-a-saga)
+  * [Endpoint para visualizar a saga](#endpoint-para-visualizar-a-saga)
   * [Acesso ao MongoDB](#acesso-ao-mongodb)
 
 ## Tecnologias
@@ -128,9 +131,157 @@ As aplicações executarão nas seguintes portas:
 
 Para acessar o Redpanda Console e visualizar tópicos e publicar eventos, basta acessar:
 
-http://localhost:8081
+http://localhost:8081  
+***Obs:*** Para publicar no redpanda, deve ser necessário acessar o menu Topics -> Escolher um dos tópicos.  
+No combobox "Actions", deverá selecionar "Produce record", deixar os campos do key como nulos e enviar apenas os campos do value com o "TYPE" sendo Json.  
+Na caixa de texto "DATA", enviar um json de exemplo: [Endpoint para visualizar a saga](#endpoint-para-visualizar-a-saga).  
+***IMPORTANTE:***  Selecionar a opção UNCOMPRESSED no campo "COMPRESSION TYPE".
   
 [Voltar ao início](#sum%C3%A1rio)  
+
+### Produtos registrados e seu estoque
+
+[Voltar ao nível anterior](#dados-da-api)
+
+Existem 3 produtos iniciais cadastrados no serviço `product-validation-service` e suas quantidades disponíveis em `inventory-service`:
+
+* **COMIC_BOOKS** (4 em estoque)
+* **BOOKS** (2 em estoque)
+* **MOVIES** (5 em estoque)
+* **MUSIC** (9 em estoque)
+
+### Endpoint para iniciar a saga:
+
+[Voltar ao nível anterior](#dados-da-api)
+
+**POST** http://localhost:3000/api/order
+
+Payload:
+
+```json
+{
+  "products": [
+    {
+      "product": {
+        "code": "COMIC_BOOKS",
+        "unitValue": 15.50
+      },
+      "quantity": 3
+    },
+    {
+      "product": {
+        "code": "BOOKS",
+        "unitValue": 9.90
+      },
+      "quantity": 1
+    }
+  ]
+}
+```
+
+Resposta:
+
+```json
+{
+  "id": "64429e987a8b646915b3735f",
+  "products": [
+    {
+      "product": {
+        "code": "COMIC_BOOKS",
+        "unitValue": 15.5
+      },
+      "quantity": 3
+    },
+    {
+      "product": {
+        "code": "BOOKS",
+        "unitValue": 9.9
+      },
+      "quantity": 1
+    }
+  ],
+  "createdAt": "2023-04-21T14:32:56.335943085",
+  "transactionId": "1682087576536_99d2ca6c-f074-41a6-92e0-21700148b519"
+}
+```
+
+### Endpoint para visualizar a saga:
+
+[Voltar ao nível anterior](#dados-da-api)
+
+É possível recuperar os dados da saga pelo **orderId** ou pelo **transactionId**, o resultado será o mesmo:
+
+**GET** http://localhost:3000/api/event?orderId=64429e987a8b646915b3735f
+
+**GET** http://localhost:3000/api/event?transactionId=1682087576536_99d2ca6c-f074-41a6-92e0-21700148b519
+
+Resposta:
+
+```json
+{
+  "id": "64429e9a7a8b646915b37360",
+  "transactionId": "1682087576536_99d2ca6c-f074-41a6-92e0-21700148b519",
+  "orderId": "64429e987a8b646915b3735f",
+  "payload": {
+    "id": "64429e987a8b646915b3735f",
+    "products": [
+      {
+        "product": {
+          "code": "COMIC_BOOKS",
+          "unitValue": 15.5
+        },
+        "quantity": 3
+      },
+      {
+        "product": {
+          "code": "BOOKS",
+          "unitValue": 9.9
+        },
+        "quantity": 1
+      }
+    ],
+    "totalAmount": 56.40,
+    "totalItems": 4,
+    "createdAt": "2023-04-21T14:32:56.335943085",
+    "transactionId": "1682087576536_99d2ca6c-f074-41a6-92e0-21700148b519"
+  },
+  "source": "ORCHESTRATOR",
+  "status": "SUCCESS",
+  "eventHistory": [
+    {
+      "source": "ORCHESTRATOR",
+      "status": "SUCCESS",
+      "message": "Saga started!",
+      "createdAt": "2023-04-21T14:32:56.78770516"
+    },
+    {
+      "source": "PRODUCT_VALIDATION_SERVICE",
+      "status": "SUCCESS",
+      "message": "Products are validated successfully!",
+      "createdAt": "2023-04-21T14:32:57.169378616"
+    },
+    {
+      "source": "PAYMENT_SERVICE",
+      "status": "SUCCESS",
+      "message": "Payment realized successfully!",
+      "createdAt": "2023-04-21T14:32:57.617624655"
+    },
+    {
+      "source": "INVENTORY_SERVICE",
+      "status": "SUCCESS",
+      "message": "Inventory updated successfully!",
+      "createdAt": "2023-04-21T14:32:58.139176809"
+    },
+    {
+      "source": "ORCHESTRATOR",
+      "status": "SUCCESS",
+      "message": "Saga finished successfully!",
+      "createdAt": "2023-04-21T14:32:58.248630293"
+    }
+  ],
+  "createdAt": "2023-04-21T14:32:58.28"
+}
+```
   
 ### Acesso ao MongoDB
 
