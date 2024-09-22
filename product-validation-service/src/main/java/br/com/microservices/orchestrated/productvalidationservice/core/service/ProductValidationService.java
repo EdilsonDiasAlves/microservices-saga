@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import static br.com.microservices.orchestrated.productvalidationservice.core.enums.SagaStatusEnum.*;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Slf4j
@@ -37,8 +38,7 @@ public class ProductValidationService {
             handleSuccess(event);
         } catch (Exception ex) {
             log.error("Error trying to validate products: ", ex);
-//            TODO: IMPLEMENT METHOD
-//            handleFailCurrentNotExecuted(event, ex.getMessage());
+            handleFailCurrentNotExecuted(event, ex.getMessage());
         }
         producer.sendEvent(jsonUtil.toJson(event));
     }
@@ -87,7 +87,7 @@ public class ProductValidationService {
     }
 
     private void handleSuccess(Event event) {
-        event.setStatus(SagaStatusEnum.SUCCESS);
+        event.setStatus(SUCCESS);
         event.setSource(CURRENT_SOURCE);
         addHistory(event, "Products are validated successfully!");
     }
@@ -103,5 +103,26 @@ public class ProductValidationService {
         event.addToHistory(history);
     }
 
+    private void handleFailCurrentNotExecuted(Event event, String message) {
+        event.setStatus(ROLLBACK_PENDING);
+        event.setSource(CURRENT_SOURCE);
+        addHistory(event, "Fail to validate products: " + message);
+    }
 
+    public void rollbackEvent(Event event) {
+        event.setStatus(FAIL);
+        event.setSource(CURRENT_SOURCE);
+        addHistory(event, "Rollback executed on product-validation!");
+        producer.sendEvent(jsonUtil.toJson(event));
+    }
+
+    public void changeValidationToFail(Event event) {
+        validationRepository
+            .findByOrderIdAndTransactionId(event.getOrder().getId(), event.getTransactionId())
+            .ifPresentOrElse( validation -> {
+                validation.setSuccess(false);
+                validationRepository.save(validation);
+            },
+            () -> createValidation(event, false));
+    }
 }
