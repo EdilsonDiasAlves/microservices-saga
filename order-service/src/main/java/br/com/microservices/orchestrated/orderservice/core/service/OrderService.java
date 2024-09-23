@@ -35,15 +35,16 @@ public class OrderService {
                 .build();
 
         repository.save(order);
-        producer.sendEvent(jsonUtil.toJson(createEvent(order)));
+        producer.sendEvent(jsonUtil.toJson(createPayload(order)));
         return order;
      }
 
-     private Event createEvent(Order order) {
-        var event = Event.builder()
+     private Event createPayload(Order order) {
+        var event = Event
+            .builder()
             .orderId(order.getId())
             .transactionId(order.getTransactionId())
-            .order(order)
+            .payload(order)
             .createdAt(LocalDateTime.now())
             .build();
         return eventService.save(event);
