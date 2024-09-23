@@ -24,7 +24,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @Service
 public class ProductValidationService {
 
-    private static final String CURRENT_SOURCE = "PRODUCT_VALIDATION_SERVICE ";
+    private static final String CURRENT_SOURCE = "PRODUCT_VALIDATION_SERVICE";
 
     private final JsonUtil jsonUtil;
     private final KafkaProducer producer;
@@ -50,17 +50,17 @@ public class ProductValidationService {
             event.getTransactionId())) {
             throw new ValidationException("There's another transactionId for this validation!");
         }
-        event.getOrder().getProducts().forEach(orderProducts -> {
+        event.getPayload().getProducts().forEach(orderProducts -> {
             validateProductInOrderProducts(orderProducts);
             validateProductCode(orderProducts.getProduct().getCode());
         });
     }
 
     private static void validateProductsInformed(Event event) {
-        if (isEmpty(event.getOrder()) || isEmpty(event.getOrder().getProducts())) {
+        if (isEmpty(event.getPayload()) || isEmpty(event.getPayload().getProducts())) {
             throw new ValidationException("Product list is empty!");
         }
-        if (isEmpty(event.getOrder().getId()) || isEmpty(event.getOrder().getTransactionId())) {
+        if (isEmpty(event.getPayload().getId()) || isEmpty(event.getPayload().getTransactionId())) {
             throw new ValidationException("orderId or transactionId must be informed!");
         }
     }
@@ -80,7 +80,8 @@ public class ProductValidationService {
     private void createValidation(Event event, boolean success) {
         var validation = Validation
             .builder()
-            .orderId(event.getOrder().getId())
+            .orderId(event.getPayload().getId())
+            .transactionId(event.getPayload().getTransactionId())
             .success(success)
             .build();
         validationRepository.save(validation);
@@ -110,6 +111,7 @@ public class ProductValidationService {
     }
 
     public void rollbackEvent(Event event) {
+        changeValidationToFail(event);
         event.setStatus(FAIL);
         event.setSource(CURRENT_SOURCE);
         addHistory(event, "Rollback executed on product-validation!");
@@ -118,7 +120,7 @@ public class ProductValidationService {
 
     public void changeValidationToFail(Event event) {
         validationRepository
-            .findByOrderIdAndTransactionId(event.getOrder().getId(), event.getTransactionId())
+            .findByOrderIdAndTransactionId(event.getPayload().getId(), event.getTransactionId())
             .ifPresentOrElse( validation -> {
                 validation.setSuccess(false);
                 validationRepository.save(validation);

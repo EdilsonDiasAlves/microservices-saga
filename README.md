@@ -145,7 +145,7 @@ Na caixa de texto "DATA", enviar um json de exemplo: [Endpoint para visualizar a
 
 [Voltar ao nível anterior](#dados-da-api)
 
-Existem 3 produtos iniciais cadastrados no serviço `product-validation-service` e suas quantidades disponíveis em `inventory-service`:
+Existem 4 produtos iniciais cadastrados no serviço `product-validation-service` e suas quantidades disponíveis em `inventory-service`:
 
 * **COMIC_BOOKS** (4 em estoque)
 * **BOOKS** (2 em estoque)
