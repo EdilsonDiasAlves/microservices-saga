@@ -29,7 +29,7 @@ public class Validation {
     @Column(nullable = false)
     private Boolean success;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
