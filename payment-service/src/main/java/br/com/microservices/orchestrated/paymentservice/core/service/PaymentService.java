@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-import static br.com.microservices.orchestrated.paymentservice.core.enums.SagaStatusEnum.SUCCESS;
+import static br.com.microservices.orchestrated.paymentservice.core.enums.SagaStatusEnum.*;
 
 @Slf4j
 @AllArgsConstructor
@@ -40,6 +40,7 @@ public class PaymentService {
             handleSuccess(event);
         } catch (Exception ex) {
             log.error("Error trying to realize payment");
+            handleFailCurrentNotExecuted(event, ex.getMessage());
         }
         producer.sendEvent(jsonUtil.toJson(event));
     }
@@ -115,6 +116,27 @@ public class PaymentService {
             .createdAt(LocalDateTime.now())
             .build();
         event.addToHistory(history);
+    }
+
+    private void handleFailCurrentNotExecuted(Event event, String message) {
+        event.setStatus(ROLLBACK_PENDING);
+        event.setSource(CURRENT_SOURCE);
+        addHistory(event, "Fail to realize payment: " + message);
+    }
+
+    public void realizeRefund(Event event) {
+        changePaymentStatusToRefund(event);
+        event.setStatus(FAIL);
+        event.setSource(CURRENT_SOURCE);
+        addHistory(event, "Rollback executed for payment!");
+        producer.sendEvent(jsonUtil.toJson(event));
+    }
+
+    private void changePaymentStatusToRefund(Event event) {
+        var payment = findByOrderIdAndTransactionId(event);
+        payment.setStatus(PaymentStatusEnum.REFUND);
+        setEventAmountItems(event, payment);
+        save(payment);
     }
 
     private Payment findByOrderIdAndTransactionId(Event event) {
