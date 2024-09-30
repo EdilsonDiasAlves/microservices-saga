@@ -19,7 +19,7 @@ public class Event {
     private String id;
     private String transactionId;
     private String orderId;
-    private Order order;
+    private Order payload;
     private EventSourceEnum source;
     private SagaStatusEnum status;
     private List<History> eventHistory;
