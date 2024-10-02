@@ -39,7 +39,7 @@ public class PaymentService {
             changePaymentToSuccess(payment);
             handleSuccess(event);
         } catch (Exception ex) {
-            log.error("Error trying to realize payment");
+            log.error("Error trying to realize payment", ex);
             handleFailCurrentNotExecuted(event, ex.getMessage());
         }
         producer.sendEvent(jsonUtil.toJson(event));
