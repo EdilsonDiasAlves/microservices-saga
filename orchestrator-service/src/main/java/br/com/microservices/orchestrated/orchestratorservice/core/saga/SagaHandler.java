@@ -10,6 +10,7 @@ public final class SagaHandler {
 
     }
 
+    // Multidimensional array, indicating event source, status, and destination topic
     public static final Object[][] SAGA_HANDLER = {
         { ORCHESTRATOR, SUCCESS, PRODUCT_VALIDATION_SUCCESS },
         { ORCHESTRATOR, FAIL, FINISH_FAIL },
@@ -29,5 +30,5 @@ public final class SagaHandler {
 
     public static final int EVENT_SOURCE_INDEX = 0;
     public static final int SAGA_STATUS_INDEX = 1;
-    public static final int SAGA_TOPIC_INDEX = 2;
+    public static final int TOPIC_INDEX = 2;
 }
