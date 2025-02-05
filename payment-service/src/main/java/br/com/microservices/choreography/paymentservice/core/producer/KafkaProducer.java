@@ -2,7 +2,6 @@ package br.com.microservices.choreography.paymentservice.core.producer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -13,15 +12,12 @@ public class KafkaProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    @Value("${spring.kafka.topic.orchestrator}")
-    private String orchestratorTopic;
-
-    public void sendEvent(String event) {
+    public void sendEvent(String event, String topic) {
         try {
-            log.info("Sending event to topic {} with data {}", orchestratorTopic, event);
-            kafkaTemplate.send(orchestratorTopic, event);
+            log.info("Sending event to topic {} with data {}", topic, event);
+            kafkaTemplate.send(topic, event);
         } catch (Exception ex) {
-            log.error("Error trying to send data to topic {} with data {}", orchestratorTopic, event, ex);
+            log.error("Error trying to send data to topic {} with data {}", topic, event, ex);
         }
     }
 
