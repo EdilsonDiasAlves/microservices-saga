@@ -4,7 +4,7 @@
 
 O projeto todo foi utilizando a abordagem de Saga Orquestrado, e pode ser visualizado na branch /develop.
 
-![Arquitetura](Conte%C3%BAdos/Imagem%20Curso.png)
+![Arquitetura](https://github.com/user-attachments/assets/49bc180b-f012-4606-bf70-3f1c5f0ad964)
 
 ### Sumário:
 
@@ -52,7 +52,7 @@ O projeto todo foi utilizando a abordagem de Saga Orquestrado, e pode ser visual
 
 Desenvolveremos a seguinte aquitetura:
 
-![Arquitetura](Conte%C3%BAdos/Arquitetura%20Proposta.png)
+![Arquitetura](https://github.com/user-attachments/assets/22084081-468d-428e-93f6-b19b1194d58b)
 
 Em nossa arquitetura, teremos 4 serviços:
 
@@ -147,7 +147,7 @@ http://localhost:3000/swagger-ui.html
 
 Você chegará nesta página:
 
-![Swagger](Conte%C3%BAdos/Documentacao.png)
+![Swagger](https://github.com/user-attachments/assets/f57b3a83-896f-4734-b598-912c1530957f)
 
 As aplicações executarão nas seguintes portas:
 
@@ -172,7 +172,7 @@ http://localhost:8081
 
 Você chegará nesta página:
 
-![Redpanda](Conte%C3%BAdos/Redpanda%20Kafka.png)
+![Redpanda](https://github.com/user-attachments/assets/0019bb42-8883-49d3-b693-9e5e9c6c97fe)
 
 ## Dados da API
 
