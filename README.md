@@ -134,6 +134,9 @@ As aplicações executarão nas seguintes portas:
 Para acessar o Redpanda Console e visualizar tópicos e publicar eventos, basta acessar:
 
 http://localhost:8081  
+
+![Redpanda Console](https://github.com/user-attachments/assets/0019bb42-8883-49d3-b693-9e5e9c6c97fe)
+
 ***Obs:*** Para publicar no redpanda, deve ser necessário acessar o menu Topics -> Escolher um dos tópicos.  
 No combobox "Actions", deverá selecionar "Produce record", deixar os campos do key como nulos e enviar apenas os campos do value com o "TYPE" sendo Json.  
 Na caixa de texto "DATA", enviar um json de exemplo: [Endpoint para visualizar a saga](#endpoint-para-visualizar-a-saga).  
